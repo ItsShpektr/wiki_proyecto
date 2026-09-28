@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 const styles = {
 container: {
 display: 'flex',
@@ -100,17 +101,20 @@ padding: '12px',
 borderBottom: '1px solid #ddd',
 }
 };
+
 const wikiData = {
 intro: {
 title: "1. Qué es la nube (NIST)",
 content: (
 <>
 Antes de proteger la nube, es fundamental definir qué la distingue de un simple servidor arrendado. Según la norma NIST SP 800-145, la computación en la nube tiene cinco características esenciales:
+
 Autoservicio bajo demanda: El cliente obtiene capacidad sin intervención humana del proveedor.
 Acceso amplio por red: Los recursos se alcanzan por la red desde distintos dispositivos.
 Agrupación de recursos: La misma infraestructura atiende a muchos clientes a la vez.
 Elasticidad rápida: La capacidad crece y se reduce según la demanda.
 Servicio medido: El uso se mide, se controla y se cobra.
+
 Consecuencia para la seguridad: El autoservicio permite que un error de configuración quede publicado en segundos, y la agrupación de recursos obliga a aislar a cada cliente de los demás.
 </>
 )
@@ -120,6 +124,7 @@ title: "2. Modelos de Servicio",
 content: (
 <>
 Existen tres modelos de servicio, clasificados según cuánto administra el cliente frente a cuánto administra el proveedor:
+
     <h3 style={styles.subtitle}>IaaS (Infraestructura como servicio)</h3>
     <p style={styles.paragraph}>El cliente administra el sistema operativo, las aplicaciones y los datos. <em>Ejemplo en Azure: máquinas virtuales, discos y redes virtuales.</em></p>
     
@@ -140,10 +145,12 @@ title: "3. Modelos de Despliegue",
 content: (
 <>
 Determinan dónde está la infraestructura y quién la comparte:
+
 Pública: Infraestructura del proveedor, disponible para cualquier cliente.
 Privada: De uso exclusivo de una organización, propia o administrada por un tercero.
 Comunitaria: Compartida por organizaciones con requisitos comunes.
 Híbrida: Dos o más modelos conectados, entre los que se mueven datos y aplicaciones.
+
 En la práctica: Una migración gradual produce, durante un tiempo, un modelo híbrido: parte de los sistemas en la nube y parte en la sala de servidores. Ambas mitades deben protegerse.
 </>
 )
@@ -153,10 +160,12 @@ title: "4. Responsabilidad Compartida",
 content: (
 <>
 La responsabilidad cambia con el modelo de servicio (IaaS, PaaS, SaaS). El proveedor protege la infraestructura física (centro de datos, red, hosts), pero hay elementos que NUNCA se transfieren al proveedor, sin importar el modelo:
+
 Datos: Clasificación, protección y decisión de cifrado.
 Configuraciones: Cada opción que se activa o que se deja por defecto.
 Cuentas: Crear, administrar y retirar el acceso de cada usuario.
 Accesos: Roles, MFA (autenticación multifactor) y políticas de acceso.
+
 Advertencia: "Está en Azure" no significa "Azure lo protege". Los errores de configuración (como dejar un contenedor público por error o reglas de red abiertas) son responsabilidad del cliente.
 </>
 )
@@ -166,9 +175,11 @@ title: "5. Pilar de Seguridad",
 content: (
 <>
 Microsoft publica el Azure Well-Architected Framework (marco de buena arquitectura) para evaluar cargas de trabajo. Su pilar de seguridad se basa en el modelo de confianza Zero Trust (Confianza Cero):
+
 Verificar explícitamente: Solo identidades de confianza realizan acciones permitidas.
 Usar acceso de mínimo privilegio: La identidad correcta, con los permisos justos, por el tiempo necesario.
 Asumir la vulneración: Diseñar controles que limiten el daño si una capa de defensa falla.
+
 
     <h3 style={styles.subtitle}>Los 5 Principios de Diseño</h3>
     <ol style={styles.list}>
@@ -188,9 +199,11 @@ title: "6. Caso Práctico",
 content: (
 <>
 Ejemplo de migración de un Sistema de Permisos de una Municipalidad a Azure:
+
 Aplicación de permisos y patentes: Se mueve a App Service (PaaS).
 Datos de permisos y patentes: Se mueve a Azure SQL Database (PaaS).
 Documentos escaneados: Se almacenan en la nube (PaaS).
+
 
     <p style={styles.paragraph}><strong>¿Qué deja de preocupar?</strong> Parchar el sistema operativo del servidor y problemas físicos (como inundaciones).</p>
     <p style={styles.paragraph}><strong>¿Qué sigue siendo municipal?</strong> Quién entra, con qué permisos, qué se publica y qué queda registrado.</p>
@@ -227,33 +240,42 @@ Documentos escaneados: Se almacenan en la nube (PaaS).
 
 }
 };
+
 export default function App() {
 const [activeTab, setActiveTab] = useState('intro');
-return (
-{/* Barra de navegación lateral */}
-Wiki GSI
-Seguridad en Cloud Computing
-{Object.entries(wikiData).map(([key, data]) => (
-<button
-key={key}
-onClick={() => setActiveTab(key)}
-style={{
-...styles.navButton,
-...(activeTab === key ? styles.activeNavButton : {})
-}}
->
-{data.title}
-))}
 
-  {/* Contenido principal */}
-  <main style={styles.mainContent}>
-    <div style={styles.card}>
-      <h2 style={styles.title}>{wikiData[activeTab].title}</h2>
-      {wikiData[activeTab].content}
+ return (
+    <div style={styles.container}>
+
+      {/* Barra de navegación lateral */}
+      <nav style={styles.sidebar}>
+        <div style={styles.logoContainer}>
+          <h1 style={styles.logoText}>Wiki GSI</h1>
+          <p style={styles.subLogoText}>Seguridad en Cloud Computing</p>
+        </div>
+        
+        {Object.entries(wikiData).map(([key, data]) => (
+          <button
+            key={key}
+            onClick={() => setActiveTab(key)}
+            style={{
+              ...styles.navButton,
+              ...(activeTab === key ? styles.activeNavButton : {})
+            }}
+          >
+            {data.title}
+          </button>
+        ))}
+      </nav>
+
+      {/* Contenido principal */}
+      <main style={styles.mainContent}>
+        <div style={styles.card}>
+          <h2 style={styles.title}>{wikiData[activeTab].title}</h2>
+          {wikiData[activeTab].content}
+        </div>
+      </main>
+
     </div>
-  </main>
-</div>
-
-
-);
+  );
 }
